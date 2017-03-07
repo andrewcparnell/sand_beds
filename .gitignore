@@ -4,6 +4,7 @@
 
 # Session Data files
 .RData
+dumpdata.R
 
 # Example code in package build process
 *-Ex.R
