@@ -1,4 +1,6 @@
 # A new model which concentrates on estimating only those sand bed ages which are unknown based on only the surrounding radiocarbon dates
+# Updated 20170421 to change the calibration curve and use 
+
 
 # The details of the model are:
 # There are 8 sand beds with different dates surrounding them
@@ -32,9 +34,8 @@ rm(pkgs)
 # Data carpentry ----------------------------------------------------------
 
 # Load in the calibration curves
-cal = read.table('intcal13.14c',sep=',')
+cal = read.table('shcal13.14c',sep=',')
 colnames(cal) = c('calbp','c14age','errorBP','Delta14C','Sigma_per_mil') 
-
 
 # SB6 ---------------------------------------------------------------------
 
@@ -47,10 +48,10 @@ sig_SB6_min = 55
 # If we calibrate them and plot we get
 SB6_min_cal = BchronCalibrate(x_SB6_min,
                               sig_SB6_min,
-                              calCurves='intcal13') # about 0 to 450
+                              calCurves='shcal13') # about 0 to 450
 SB6_max_cal = BchronCalibrate(x_SB6_max,
                               sig_SB6_max,
-                              calCurves='intcal13') # about 500
+                              calCurves='shcal13') # about 500
 
 par(mfrow=c(2,1))
 plot(SB6_min_cal)
@@ -104,7 +105,7 @@ for(i in 1:nrow(theta_use)) {
 theta_SB6_final = aggregate(post, by = list(theta_use[,'theta_SB6']), sum)
 theta_SB6_dens = theta_SB6_final[,2]/sum(theta_SB6_final[,2])
 
-pdf(file='SB6_20170305.pdf',width=8,height=8)
+pdf(file='SB6_20170421.pdf',width=8,height=8)
 par(mfrow=c(3,1))
 par(mar=c(3,3,2,1), mgp=c(2,.7,0), tck=-.01,las=1)
 plot(SB6_min_cal, xlim = xlim_range)
@@ -115,7 +116,7 @@ dev.off()
 
 # SB7 ---------------------------------------------------------------------
 
-# Sand bed 7 is the next one. It has 5(!) restrictions, an upper and 4 lower date. They are:
+# Sand bed 7 is the next one. It has 8(!) restrictions, an upper and 4 lower date. They are:
 x_SB7_max = 460 # Quidico - OS-106356  
 sig_SB7_max = 30
 x_SB7_min = 460 # OS-102372
@@ -126,32 +127,50 @@ x_SB7_min_3 = 570 # Quidico - OS-103409
 sig_SB7_min_3 = 45
 x_SB7_min_4 = 495 # Quidico - OS-115318
 sig_SB7_min_4 = 15
+x_SB7_max_2 = 425 #425 +/- 15 (above basal sand) - OS-106268???
+sig_SB7_max_2 = 15
+x_SB7_max_3 = 475 #475 +/- 20 (above basal sand) - OS-103174???
+sig_SB7_max_3 = 20
+x_SB7_min_5 = 760 #760 +/- 20 (within basal sand) - OS-103173???
+sig_SB7_min_5 = 20
 
 # If we calibrate them and plot we get
 SB7_min_cal = BchronCalibrate(x_SB7_min,
                               sig_SB7_min,
-                              calCurves='intcal13')
+                              calCurves='shcal13')
 SB7_min_2_cal = BchronCalibrate(x_SB7_min_2,
-                              sig_SB7_min_2,
-                              calCurves='intcal13')
+                                sig_SB7_min_2,
+                                calCurves='shcal13')
 SB7_min_3_cal = BchronCalibrate(x_SB7_min_3,
-                              sig_SB7_min_3,
-                              calCurves='intcal13')
+                                sig_SB7_min_3,
+                                calCurves='shcal13')
 SB7_min_4_cal = BchronCalibrate(x_SB7_min_4,
-                              sig_SB7_min_4,
-                              calCurves='intcal13')
+                                sig_SB7_min_4,
+                                calCurves='shcal13')
+SB7_min_5_cal = BchronCalibrate(x_SB7_min_5,
+                                sig_SB7_min_5,
+                                calCurves='shcal13')
 SB7_max_cal = BchronCalibrate(x_SB7_max,
                               sig_SB7_max,
-                              calCurves='intcal13')
+                              calCurves='shcal13')
+SB7_max_2_cal = BchronCalibrate(x_SB7_max_2,
+                                sig_SB7_max_2,
+                                calCurves='shcal13')
+SB7_max_3_cal = BchronCalibrate(x_SB7_max_3,
+                                sig_SB7_max_3,
+                                calCurves='shcal13')
 
 pdf(file = 'SB7_plots.pdf', width = 12, height = 8)
-par(mfrow=c(5,1))
+par(mfrow=c(8,1))
 par(mar=c(3,3,2,1), mgp=c(2,.7,0), tck=-.01,las=1)
-plot(SB7_min_cal, xlim = c(200, 1600), main = 'Tirua - OS-102372 - maximum')
-plot(SB7_min_2_cal, xlim = c(200, 1600), main = 'Tirua - OS-111756 - maximum')
-plot(SB7_min_3_cal, xlim = c(200, 1600), main = 'Quidico - OS-103409 - maximum')
-plot(SB7_min_4_cal, xlim = c(200, 1600), main = 'Quidico - OS-115318 - maximum')
-plot(SB7_max_cal, xlim = c(200, 1600), main = 'Quidico - OS-106356 - minimum')
+plot(SB7_min_cal, xlim = c(200, 1600), main = 'Tirua - OS-102372 - maximum', xlab = 'Age (years BP)')
+plot(SB7_min_2_cal, xlim = c(200, 1600), main = 'Tirua - OS-111756 - maximum', xlab = 'Age (years BP)')
+plot(SB7_min_3_cal, xlim = c(200, 1600), main = 'Quidico - OS-103409 - maximum', xlab = 'Age (years BP)')
+plot(SB7_min_4_cal, xlim = c(200, 1600), main = 'Quidico - OS-115318 - maximum', xlab = 'Age (years BP)')
+plot(SB7_min_5_cal, xlim = c(200, 1600), main = 'Quidico - OS-103173 - maximum/within? (new)', xlab = 'Age (years BP)')
+plot(SB7_max_cal, xlim = c(200, 1600), main = 'Quidico - OS-106356 - minimum', xlab = 'Age (years BP)')
+plot(SB7_max_2_cal, xlim = c(200, 1600), main = 'Quidico - OS-106268 - minimum (new)', xlab = 'Age (years BP)')
+plot(SB7_max_3_cal, xlim = c(200, 1600), main = 'Quidico - OS-103174 - minimum (new)', xlab = 'Age (years BP)')
 par(mfrow=c(1,1))
 dev.off()
 
@@ -159,8 +178,8 @@ dev.off()
 
 # Consider a model for these data you have:
 # x_min_1 ~ N(r(theta_1), sigma_1^2)
-# x_min_3 ~ N(r(theta_1), sigma_1^2)
-# x_min_4 ~ N(r(theta_1), sigma_1^2)
+# x_min_3 ~ N(r(theta_1), sigma_3^2)
+# x_min_4 ~ N(r(theta_1), sigma_4^2)
 # x_2 ~ N(r(theta_2), sigma_2^2)
 # theta_1 ~ U(400, 700)
 # theta_2 ~ U(400, 700)
@@ -204,7 +223,7 @@ theta_SB7_final = aggregate(post, by = list(theta_use[,'theta_SB7']), sum)
 theta_SB7_dens = theta_SB7_final[,2]/sum(theta_SB7_final[,2])
 
 xlim_range = c(400,700)
-pdf(file='SB7_20170305.pdf',width=8,height=8)
+pdf(file='SB7_20170421.pdf',width=8,height=8)
 par(mfrow=c(6,1))
 par(mar=c(3,3,2,1), mgp=c(2,.7,0), tck=-.01,las=1)
 plot(SB7_min_cal, xlim = xlim_range)
@@ -226,10 +245,10 @@ sig_SB8_min = 20
 # If we calibrate them and plot we get
 SB8_min_cal = BchronCalibrate(x_SB8_min,
                               sig_SB8_min,
-                              calCurves='intcal13') # about 0 to 450
+                              calCurves='shcal13') # about 0 to 450
 SB8_max_cal = BchronCalibrate(x_SB8_max,
                               sig_SB8_max,
-                              calCurves='intcal13') # about 500
+                              calCurves='shcal13') # about 500
 
 xlim_range = c(1400, 1850)
 par(mfrow=c(2,1))
@@ -274,7 +293,7 @@ for(i in 1:nrow(theta_use)) {
 theta_SB8_final = aggregate(post, by = list(theta_use[,'theta_SB8']), sum)
 theta_SB8_dens = theta_SB8_final[,2]/sum(theta_SB8_final[,2])
 
-pdf(file='SB8_20170305.pdf',width=8,height=8)
+pdf(file='SB8_20170421.pdf',width=8,height=8)
 par(mfrow=c(3,1))
 par(mar=c(3,3,2,1), mgp=c(2,.7,0), tck=-.01,las=1)
 plot(SB8_min_cal, xlim = xlim_range)
@@ -294,10 +313,10 @@ sig_basal_min = 20
 # If we calibrate them and plot we get
 basal_min_cal = BchronCalibrate(x_basal_min,
                               sig_basal_min,
-                              calCurves='intcal13') # about 0 to 450
+                              calCurves='shcal13') # about 0 to 450
 basal_max_cal = BchronCalibrate(x_basal_max,
                               sig_basal_max,
-                              calCurves='intcal13') # about 500
+                              calCurves='shcal13') # about 500
 
 xlim_range = c(1550, 1900)
 par(mfrow=c(2,1))
@@ -342,7 +361,7 @@ for(i in 1:nrow(theta_use)) {
 theta_basal_final = aggregate(post, by = list(theta_use[,'theta_basal']), sum)
 theta_basal_dens = theta_basal_final[,2]/sum(theta_basal_final[,2])
 
-pdf(file='basal_20170305.pdf',width=8,height=8)
+pdf(file='basal_20170421.pdf',width=8,height=8)
 par(mfrow=c(3,1))
 par(mar=c(3,3,2,1), mgp=c(2,.7,0), tck=-.01,las=1)
 plot(basal_min_cal, xlim = xlim_range)

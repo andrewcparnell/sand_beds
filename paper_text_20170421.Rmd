@@ -1,0 +1,46 @@
+---
+title: "Sand bed age models for Tina"
+author: "Andrew Parnell"
+date: "21/04/2017"
+output:
+  word_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Simple text for main document
+
+We estimate the ages of each sand bed using a bespoke Bayesian chronology model described in the Supplementary Material. The model is adapted from the phase modelling approach of REF BUCK, BRONK RAMSEY. The model calibrates all sand bed dates simultaneously using the Southern Hemisphere Radiocarbon Calibration Curve of REF HOGG. Dates which lie beneath the sand bed are calibrated to provide a lower bound, and dates above the sand bed are calibrated to provide an upper bound. The age of the sand bed itself is modelled as lying in between these bounds. We fit the model to each of the unknown sand bed ages and create a posterior probability distribution of the age of the sand bed given the surrounding dates. We then report these posterior probability distributions using standard probability intervals (e.g. 95\%) but the full access to the posterior distribution further allows us to calculate differences between related sand beds and other recurrence relations.
+
+# More technical text for supplementary material
+
+We create a Bayesian chronology model to estimate the ages of the sand beds given limiting date information on the boundary ages. In this section we first outline the notation we use for the model, and then discuss fitting and the reporting of results. All models were fitted using the R software (REF R) and is available on GitHub at https://github.com/andrewcparnell/sand_beds.
+
+We write $x_{ijk}$ as the radiocarbon age of sand bed $i$ ($i=1,\ldots,N$), date type $j$ ($j=1, 2$ corresponding to minima and maxima dates respectively), and date number $k$ ($k = 1, \ldots, n_{ij}$). Here $N$ is the total number of sand beds and $n_{ij}$ is the number of dates for sand bed $i$ and date type $j$. For example, $x_{312}$ would correspond to the 2nd minimum date for sand bed 3. Similarly we write $\sigma_{ijk}$ as the 1-sigma radiocarbon standard deviation of the same date. These quantities, together with the Southern Hemisphere Calibration Curve, which we write as $r()$, (REF HOGG) form the data for our model. 
+
+We write $\phi_{ij}$ as the minimum ($j=1$) and maximum ($j=2$) age bounds for sand bed $i$. For example, $\phi_{62}$ would represent the maximum age of sand bed 6. Our key parameter of interest we define as $\theta_i$ which is the age of sand bed $i$. We fit the model to estimate the posterior probability distribution of the unknown parameters ($\phi$ and $\theta$) given the data, where $\phi$, for example, represents the collection of all $\phi_{ij}$ values. The full posterior distribution can be written in Bayesian format (see e.g. REF GELMAN) as:
+$$p(\theta, \phi | x, \sigma, r) \propto \prod_{i=1}^N \left[ \prod_{k=1}^{n_{ij}} \prod_{j=1}^{2} p(x_{ijk} | \sigma_{ijk}, \phi_{ij}, r) \right] p(\theta_i | \phi_{i1}, \phi_{i2}) p(\phi_{i1}) p(\phi_{i2})$$
+
+Here $p$ represents a probability distribution. $p(x_{ijk} | \sigma_{ijk}, \phi_{ij}, r)$ is the probability distribution of the radiocarbon dates given the limiting dates, the 1-sigma standard deviation and the calibration curve. This is (as standard) assumed normally distributed: $x_{ijk} | \sigma_{ijk}, \phi_{ij}, r \sim N(r(\phi_{ij}), \sigma_{ijk}^2)$. The second term $p(\theta_i | \phi_{i1}, \phi_{i2})$ is the Bayesian prior distribution on the limiting ages given the true unknown sand bed age $\theta_i$. We assume that the sand bed age is uniformly distributed between the two limits, so that $\theta_i | \phi_{i1}, \phi_{i2} \sim U(\phi_{i1}, \phi_{i2})$. Finally the prior distributions on the limits are given flat prior distributions $p(\phi_{i1}) = p(\phi_{i2}) \propto 1$. They are informed solely by the radiocarbon ages.
+
+The model defined above can be fitted using the standard Bayesian method of Markov chain Monte Carlo (REF BROOKS ET AL), though we found this method to be very inefficient and consistently obtained convergence problems. Instead we approximate the model fitting stage by breaking up the model and fitting it to each individual sand beds. This runs the risk of obtaining sand beds not in chronological order, but in practice the sand beds are separated enough that this proves not to occur. We fit the model using numerical integration by creating a three dimensional high-resolution grid for the parameter set $(\phi_{i1}, \phi_{i2}, \theta_i)$ and evaluating the likelihood and prior distribution score as defined above for each combination. We then marginalise (sum) out the probabilities over the $\phi$ parameters to obtain a gridded posterior probability distribution for $\theta_i$. We use this posterior probability distribution for all subsequent output.
+
+Each sand bed posterior distribution can be plotted as a probability distribution histogram, or summarise into mean, standard deviation, credibility interval. We generally report 95\% credibility intervals as standard. To create recurrence plots, we sample from the posterior distributions for each sand bed and subsequently create differences across a set of 10,000 posterior samples. These can similarly be summarised by histograms or credibility intervals. 
+
+## References
+
+Buck, C. E., Cavanagh, W. G., & Litton, C. D. (1996). Bayesian Approach to Interpreting Archaeological Data. book, Chichester: John Wiley and Sons Ltd.
+
+Bronk Ramsey, C. (2008). Deposition models for chronological records. Quaternary Science Reviews, 27(1–2), 42–60. article. http://doi.org/10.1016/j.quascirev.2007.01.019
+
+Hogg, A., Hua, Q., Blackwell, P. G., Niu, M., Buck, C. E., Guilderson, T. P., … Zimmerman, S. R. H. (2013). SHCal13 Southern Hemisphere Calibration, 0–50,000 Years cal BP. Radiocarbon. http://doi.org/10.2458/azu_js_rc.55.16783
+
+R Core Team (2016). R: A language and environment for statistical computing. R
+  Foundation for Statistical Computing, Vienna, Austria. URL https://www.R-project.org/.
+
+Gelman, A., Carlin, J. B., Stern, H. S., Dunson, D. B., Vehtari, A., & Rubin, D. B. (2013). Bayesian Data Analysis, Third Edition (Vol. 1). CRC Press. Retrieved from https://books.google.com/books?hl=en&lr=&id=ZXL6AQAAQBAJ&pgis=1
+
+Brooks, S., Gelman, A., Jones, G., & Meng, X. (2011). Handbook of Markov Chain Monte Carlo. Retrieved from https://books.google.com/books?hl=en&lr=&id=qfRsAIKZ4rIC&oi=fnd&pg=PP1&dq=handbook+of+markov+chain+monte+carlo&ots=Rbv59V1j-T&sig=SAfdxFtEquUbw-PpcgaHXtqIVj8
