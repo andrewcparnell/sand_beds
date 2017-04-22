@@ -117,30 +117,40 @@ dev.off()
 # SB7 ---------------------------------------------------------------------
 
 # Sand bed 7 is the next one. It has 8(!) restrictions, an upper and 4 lower date. They are:
-x_SB7_max = 460 # Quidico - OS-106356  
-sig_SB7_max = 30
+# OS-102372  (460 +/- 20)
 x_SB7_min = 460 # OS-102372
 sig_SB7_min = 20
-x_SB7_min_2 = 1630 # OS-111756    
-sig_SB7_min_2 = 20
+# Ingore this one - way outside the others
+# x_SB7_min_2 = 1630 # OS-111756    
+# sig_SB7_min_2 = 20
+# OS-103409 (570 +/- 45)
 x_SB7_min_3 = 570 # Quidico - OS-103409
 sig_SB7_min_3 = 45
+# OS- 115318 (495 +/- 15)
 x_SB7_min_4 = 495 # Quidico - OS-115318
 sig_SB7_min_4 = 15
-x_SB7_max_2 = 425 #425 +/- 15 (above basal sand) - OS-106268???
-sig_SB7_max_2 = 15
-x_SB7_max_3 = 475 #475 +/- 20 (above basal sand) - OS-103174???
-sig_SB7_max_3 = 20
-x_SB7_min_5 = 760 #760 +/- 20 (within basal sand) - OS-103173???
-sig_SB7_min_5 = 20
+# OS-106268 (425 +/- 15)
+x_SB7_min_5 = 425 #425 +/- 15 (above basal sand) - OS-106268???
+sig_SB7_min_5 = 15
+# OS-103174 (475 +/- 20)
+x_SB7_min_6 = 475 #475 +/- 20 (above basal sand) - OS-103174???
+sig_SB7_min_6 = 20
+
+# Max ages are
+# OS-106356 (460 +/- 30)
+x_SB7_max = 460 # Quidico - OS-106356  
+sig_SB7_max = 30
+# Ingore this one - again way outside
+# x_SB7_max_2 = 760 #760 +/- 20 (within basal sand) - OS-103173???
+# sig_SB7_max_2 = 20
 
 # If we calibrate them and plot we get
 SB7_min_cal = BchronCalibrate(x_SB7_min,
                               sig_SB7_min,
                               calCurves='shcal13')
-SB7_min_2_cal = BchronCalibrate(x_SB7_min_2,
-                                sig_SB7_min_2,
-                                calCurves='shcal13')
+# SB7_min_2_cal = BchronCalibrate(x_SB7_min_2,
+#                                 sig_SB7_min_2,
+#                                 calCurves='shcal13')
 SB7_min_3_cal = BchronCalibrate(x_SB7_min_3,
                                 sig_SB7_min_3,
                                 calCurves='shcal13')
@@ -150,27 +160,23 @@ SB7_min_4_cal = BchronCalibrate(x_SB7_min_4,
 SB7_min_5_cal = BchronCalibrate(x_SB7_min_5,
                                 sig_SB7_min_5,
                                 calCurves='shcal13')
+SB7_min_6_cal = BchronCalibrate(x_SB7_min_6,
+                                sig_SB7_min_6,
+                                calCurves='shcal13')
 SB7_max_cal = BchronCalibrate(x_SB7_max,
                               sig_SB7_max,
                               calCurves='shcal13')
-SB7_max_2_cal = BchronCalibrate(x_SB7_max_2,
-                                sig_SB7_max_2,
-                                calCurves='shcal13')
-SB7_max_3_cal = BchronCalibrate(x_SB7_max_3,
-                                sig_SB7_max_3,
-                                calCurves='shcal13')
 
 pdf(file = 'SB7_plots.pdf', width = 12, height = 8)
-par(mfrow=c(8,1))
+par(mfrow=c(6,1))
 par(mar=c(3,3,2,1), mgp=c(2,.7,0), tck=-.01,las=1)
 plot(SB7_min_cal, xlim = c(200, 1600), main = 'Tirua - OS-102372 - maximum', xlab = 'Age (years BP)')
-plot(SB7_min_2_cal, xlim = c(200, 1600), main = 'Tirua - OS-111756 - maximum', xlab = 'Age (years BP)')
+# plot(SB7_min_2_cal, xlim = c(200, 1600), main = 'Tirua - OS-111756 - maximum', xlab = 'Age (years BP)')
 plot(SB7_min_3_cal, xlim = c(200, 1600), main = 'Quidico - OS-103409 - maximum', xlab = 'Age (years BP)')
 plot(SB7_min_4_cal, xlim = c(200, 1600), main = 'Quidico - OS-115318 - maximum', xlab = 'Age (years BP)')
-plot(SB7_min_5_cal, xlim = c(200, 1600), main = 'Quidico - OS-103173 - maximum/within? (new)', xlab = 'Age (years BP)')
+plot(SB7_min_5_cal, xlim = c(200, 1600), main = 'Quidico - OS-106268 - maximum (new)', xlab = 'Age (years BP)')
+plot(SB7_min_6_cal, xlim = c(200, 1600), main = 'Quidico - OS-103174 - maximum (new)', xlab = 'Age (years BP)')
 plot(SB7_max_cal, xlim = c(200, 1600), main = 'Quidico - OS-106356 - minimum', xlab = 'Age (years BP)')
-plot(SB7_max_2_cal, xlim = c(200, 1600), main = 'Quidico - OS-106268 - minimum (new)', xlab = 'Age (years BP)')
-plot(SB7_max_3_cal, xlim = c(200, 1600), main = 'Quidico - OS-103174 - minimum (new)', xlab = 'Age (years BP)')
 par(mfrow=c(1,1))
 dev.off()
 
@@ -180,7 +186,9 @@ dev.off()
 # x_min_1 ~ N(r(theta_1), sigma_1^2)
 # x_min_3 ~ N(r(theta_1), sigma_3^2)
 # x_min_4 ~ N(r(theta_1), sigma_4^2)
-# x_2 ~ N(r(theta_2), sigma_2^2)
+# x_min_5 ~ N(r(theta_1), sigma_5^2)
+# x_min_6 ~ N(r(theta_1), sigma_6^2)
+# x_max_1 ~ N(r(theta_2), sigma_2^2)
 # theta_1 ~ U(400, 700)
 # theta_2 ~ U(400, 700)
 # theta_SB7 ~ U(theta_1, theta_2)
@@ -212,6 +220,12 @@ for(i in 1:nrow(theta_use)) {
     dnorm(x_SB7_min_4, 
           mean = curr_mean_min, 
           sd = sqrt(curr_sd_min^2 + sig_SB7_min_4^2)) *
+    dnorm(x_SB7_min_5, 
+          mean = curr_mean_min, 
+          sd = sqrt(curr_sd_min^2 + sig_SB7_min_4^2)) *
+    dnorm(x_SB7_min_6, 
+          mean = curr_mean_min, 
+          sd = sqrt(curr_sd_min^2 + sig_SB7_min_4^2)) *
     dnorm(x_SB7_max, 
           mean = curr_mean_max, 
           sd = sqrt(curr_sd_max^2 + sig_SB7_max^2))
@@ -224,14 +238,17 @@ theta_SB7_dens = theta_SB7_final[,2]/sum(theta_SB7_final[,2])
 
 xlim_range = c(400,700)
 pdf(file='SB7_20170421.pdf',width=8,height=8)
-par(mfrow=c(6,1))
+par(mfrow=c(7,1))
 par(mar=c(3,3,2,1), mgp=c(2,.7,0), tck=-.01,las=1)
-plot(SB7_min_cal, xlim = xlim_range)
-plot(SB7_min_2_cal, xlim = xlim_range)
-plot(SB7_min_3_cal, xlim = xlim_range)
-plot(SB7_min_4_cal, xlim = xlim_range)
+plot(SB7_min_cal, xlim = c(200, 1600), main = 'Tirua - OS-102372 - maximum', xlab = 'Age (years BP)')
+# plot(SB7_min_2_cal, xlim = c(200, 1600), main = 'Tirua - OS-111756 - maximum', xlab = 'Age (years BP)')
+plot(SB7_min_3_cal, xlim = c(200, 1600), main = 'Quidico - OS-103409 - maximum', xlab = 'Age (years BP)')
+plot(SB7_min_4_cal, xlim = c(200, 1600), main = 'Quidico - OS-115318 - maximum', xlab = 'Age (years BP)')
+plot(SB7_min_5_cal, xlim = c(200, 1600), main = 'Quidico - OS-106268 - maximum (new)', xlab = 'Age (years BP)')
+plot(SB7_min_6_cal, xlim = c(200, 1600), main = 'Quidico - OS-103174 - maximum (new)', xlab = 'Age (years BP)')
+plot(SB7_max_cal, xlim = c(200, 1600), main = 'Quidico - OS-106356 - minimum', xlab = 'Age (years BP)')
 plot(theta_SB7_final[,1], theta_SB7_dens, type = 'l', xlab = 'SB7', xlim = xlim_range)
-plot(SB7_max_cal, xlim = xlim_range)
+dev.off()
 par(mfrow=c(1,1))
 
 # SB8 ---------------------------------------------------------------------
@@ -522,6 +539,7 @@ ggplot(df2a_north, aes(x = value , fill=key, group = key)) +
   facet_grid(key ~ .,scales='free') + 
   ylab('Probability Density') +
   theme_bw()+
+  scale_x_continuous(breaks = seq(0, 1400, by = 200)) +
   theme(legend.position='None', axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
   #axis.title.y=element_text(angle=0,vjust=1,hjust=0),+
   ggtitle('Age difference of sand beds - northern segment')+xlab('Age difference (years AD)')
@@ -558,12 +576,12 @@ ggplot(df2a_south, aes(x = value , fill=key, group = key)) +
   geom_density(colour = NA) + 
   facet_grid(key ~ .,scales='free') + 
   ylab('Probability Density') +
+  scale_x_continuous(breaks = seq(0, 400, by = 25)) +
   theme_bw()+
   theme(legend.position='None', axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
   #axis.title.y=element_text(angle=0,vjust=1,hjust=0),+
   ggtitle('Age difference of sand beds - southern segment')+xlab('Age difference (years AD)')
 ggsave('Sand_beds_fig4.pdf',height=8,width=8)
-
 
 # Create tabular output ---------------------------------------------------
 
